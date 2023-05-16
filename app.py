@@ -9,7 +9,7 @@ def main():
    
     @st.cache_resource
     def load_model():
-        model = tf.keras.models.load_model('test_tube_classifier.hdf5')
+        model = tf.keras.models.load_model('model.h5')
         return model
     
     def import_and_predict(image_data, model):
@@ -17,14 +17,14 @@ def main():
         image = ImageOps.fit(image_data,size, Image.LANCZOS)
         image = np.asarray(image)
         image = image / 255.0
-        img_reshape = np.reshape(image, (1, 128, 128, 3))
+        img_reshape = np.reshape(image, (1, 28, 28, 1))
         prediction = model.predict(img_reshape)
         return prediction
 
     model = load_model()
-    class_names =  ["High", "Moderate", "No reducing sugar", "Traceable"]
+    class_names =  ["truck", "scooty", "plane", "helicopter", "cycle", "car", "bus", "boat", "bike"]
 
-    st.write("# Glucose Level (Benedict Solution) Classifier")
+    st.write("# Vehicle Classifier")
    
     file = st.file_uploader("Choose photo from computer", type=["jpg", "png", "jpeg"])
 
@@ -36,7 +36,7 @@ def main():
         prediction = import_and_predict(image, model)
         class_index = np.argmax(prediction)
         class_name = class_names[class_index]
-        string = "Glucose Level: " + class_name
+        string = "Type: " + class_name
         st.success(string)
  
 if __name__ == "__main__":
